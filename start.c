@@ -17,7 +17,7 @@ int main() {
 
     /* TBD: Creare una istanza della struttura dati */
 
-    struct MonitorWorker * p = (struct MonitorWorker *) shmat(id_shm, NULL, 0);
+    struct MonitorWorker * p = (struct MonitorWorker *) shmat(IPC_PRIVATE, NULL, 0);
     if(p == (void *)-1) {
         perror("Errore shmat");
         exit(1);
