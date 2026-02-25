@@ -71,7 +71,7 @@ int main() {
 
     delete_monitor_worker(p);
     shmdt(p);
-    shmctl(id_shm, IPC_RMID, NULL);
+    shmctl(IPC_PRIVATE, IPC_RMID, NULL);
 
     return 0;
 }
