@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/shm.h>
+#include <sys/ipc.h>
 
 #include "worker.h"
 
@@ -17,7 +18,13 @@ int main() {
 
     /* TBD: Creare una istanza della struttura dati */
 
-    struct MonitorWorker * p = (struct MonitorWorker *) shmat(IPC_PRIVATE, NULL, 0);
+    int id_shm = shmget(IPC_PRIVATE, sizeof(struct MonitorWorker), IPC_CREAT | 0664);
+    if(id_shm < 0) {
+        perror("Errore shmget");
+        exit(1);
+    }
+
+    struct MonitorWorker * p = (struct MonitorWorker *) shmat(id_shm, NULL, 0);
     if(p == (void *)-1) {
         perror("Errore shmat");
         exit(1);
@@ -71,7 +78,7 @@ int main() {
 
     delete_monitor_worker(p);
     shmdt(p);
-    shmctl(IPC_PRIVATE, IPC_RMID, NULL);
+    shmctl(id_shm, IPC_RMID, NULL);
 
     return 0;
 }
